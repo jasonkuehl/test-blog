@@ -1,7 +1,8 @@
 # Change baseurl before deploy
-baseurl = "https://demo.stack.jimmycai.com"
+baseurl = "https://test-blog.jasonkuehl.com"
 languageCode = "en-us"
-title = "Hugo Theme Stack Starter"
+paginate = 5
+title = "Jason Kuehl Blog"
 
 # Theme i18n support
 # Available values: en, fr, id, ja, ko, pt-br, zh-cn, zh-tw, es, de, nl, it, th, el, uk, ar
@@ -13,6 +14,3 @@ hasCJKLanguage = false
 
 # Change it to your Disqus shortname before using
 disqusShortname = "hugo-theme-stack"
-
-[pagination]
-pagerSize = 5
