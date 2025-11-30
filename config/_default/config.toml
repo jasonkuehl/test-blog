@@ -1,7 +1,7 @@
 # Change baseurl before deploy
 baseurl = "https://test-blog.jasonkuehl.com"
 languageCode = "en-us"
-paginate = 5
+paginate = 7
 title = "Jason Kuehl Blog"
 
 # Theme i18n support
