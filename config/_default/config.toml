@@ -1,7 +1,6 @@
 # Change baseurl before deploy
-baseurl = "https://test-blog.jasonkuehl.com"
+baseurl = "https://blog.jasonkuehl.com"
 languageCode = "en-us"
-paginate = 7
 title = "Jason Kuehl Blog"
 
 # Theme i18n support
@@ -14,3 +13,20 @@ hasCJKLanguage = false
 
 # Change it to your Disqus shortname before using
 disqusShortname = "hugo-theme-stack"
+
+[params]
+  dateform        = "Jan 2, 2006"
+  dateformShort   = "Jan 2"
+  dateformNum     = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04 -0700"
+
+[services]
+  [services.googleAnalytics]
+    id = ""
+    disable = true
+
+[[imports]]
+path = "github.com/CaiJimmy/hugo-theme-stack/v3"
+
+[pagination]
+  pagerSize = 10
