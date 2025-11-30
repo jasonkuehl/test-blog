@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>S3 on Jason Kuehl Blog</title><link>https://blog.jasonkuehl.com/tags/s3/</link><description>Recent content in S3 on Jason Kuehl Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 13 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.jasonkuehl.com/tags/s3/index.xml" rel="self" type="application/rss+xml"/><item><title>How I Found An S3 Vulnerability</title><link>https://blog.jasonkuehl.com/p/how-i-found-an-s3-vulnerability/</link><pubDate>Tue, 13 Oct 2020 00:00:00 +0000</pubDate><guid>https://blog.jasonkuehl.com/p/how-i-found-an-s3-vulnerability/</guid><description>&lt;img src="https://blog.jasonkuehl.com/p/how-i-found-an-s3-vulnerability/cover.jpg" alt="Featured image of post How I Found An S3 Vulnerability" /&gt;&lt;p&gt;It all started back in 2018 with the below email:&lt;/p&gt;
+&lt;p&gt;I selected the link within the email it brought me to the following URL.&lt;/p&gt;
+&lt;p&gt;Notice it’s a straight S3 link to a public S3 URL, with PII in it. (Take my word on that) :). So I sent this email:&lt;/p&gt;
+&lt;p&gt;To which they responded:&lt;/p&gt;
+&lt;p&gt;Now, remember, this is 2018: right at the height of the S3 bucket madness. You couldn’t go a single month without seeing a new S3 Leak in the headlines. To name a few examples.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Booz Allen Hamilton The U.S. defense contractor&lt;/li&gt;
+&lt;li&gt;U.S. Voter Records A Republican-party backed big data firm&lt;/li&gt;
+&lt;li&gt;Dow Jones &amp;amp; Co Personally identifiable information for 2.2 million people&lt;/li&gt;
+&lt;li&gt;WWE Personally identifiable information about over 3 million wrestling fans&lt;/li&gt;
+&lt;li&gt;Verizon Wireless Personally identifiable information about 6 million people&lt;/li&gt;
+&lt;li&gt;Time Warner Cable Personally identifiable information about 4 million customers&lt;/li&gt;
+&lt;li&gt;Pentagon Exposures Terabytes of information from spying archive, resume for intelligence positions–including security clearance and operations history, credentials and metadata from an intra-agency&lt;/li&gt;
+&lt;li&gt;intelligence sharing platform.&lt;/li&gt;
+&lt;li&gt;National Credit Federation 111GB of detailed financial information&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Luckily, the Org I’m talking about here knew about the issues and was trying to fix it! Great! I sent this follow up:&lt;/p&gt;
+&lt;p&gt;The job was done, right? End of post? You’d be incorrect. Fast-forward to 2020. COVID-19 hit, and I needed to reactivate my membership to get access to this software again.&lt;/p&gt;
+&lt;p&gt;Once again, I got an invoice but this time there is no special link, like the one above. The link is just s3.amazonaws.com/JKLOL/HASH/INVOICE.PDF&lt;/p&gt;
+&lt;p&gt;I remembered that I emailed them about this earlier and was able to find that same email. I also found out later that the ticket I opened in 2018 was never closed. I start to fire off emails:&lt;/p&gt;
+&lt;p&gt;Their response:&lt;/p&gt;
+&lt;p&gt;In my next email I gave them some more details on the issue the same in 2018:&lt;/p&gt;
+&lt;p&gt;To which they responded:&lt;/p&gt;
+&lt;p&gt;Amazon.com: Challenge Accepted MEME Vinyl Decal Sticker- 12&amp;quot; Wide &amp;hellip;&lt;/p&gt;
+&lt;p&gt;“Working As Designed” by leaving PII data in a public S3 path. I didn’t buy what they were selling. I took him up on their offer of providing links/evidence.&lt;/p&gt;
+&lt;p&gt;As I started digging, I began where anyone would. Could I get to the data from the root of the URL? The answer was yes. When I went to the roof of the bucket name, I almost filled my pants when I saw a full XML list of hashes and links to files.&lt;/p&gt;
+&lt;p&gt;(Part of the email I sent with my evidence)&lt;/p&gt;
+&lt;p&gt;It was FILLED with PII. I started digging even more:&lt;/p&gt;
+&lt;p&gt;Credit card and checking data. Not full numbers or accounts (thank Tux). But now I’m really starting to wonder if there is any more data in here?&lt;/p&gt;
+&lt;p&gt;I decided that instead of building a fancy script that would parse the XML and look pretty, I would make it as nasty as possible to pull all the data in the bucket. This was more or less to prove a point that you don’t need a nice script to get access to critical data. With a combination of wget, cat, cut, awk, and sed I was able to do this.&lt;/p&gt;
+&lt;p&gt;I got a complete list of all objects in the open folder. From here I used pdftotext to mass convert all PDF’s into text. I then did searches for all my contact information and found nothing (which made me extremely happy). Then I deleted the rest of the data. However, I did find things like this telling me this company does a lot of other processing for other companies.&lt;/p&gt;
+&lt;p&gt;I took at this data, everything I learned and sent it off to my vendor. This is what I got back 🙂&lt;/p&gt;
+&lt;p&gt;With that, I wait. Working in the same field I do know that these things take time to fix.&lt;/p&gt;
+&lt;p&gt;However, what is the fix? Well, if you don’t use IAC (Infra As Code) it’s 3 clicks to turn off listing objects (Instructions) and just uncheck that button.&lt;/p&gt;
+&lt;p&gt;If applying a policy is more your style here is the basics for a public bucket.
+This will allow for only a get on objects and you need the entire path.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;Version&amp;#34;: &amp;#34;2012-10-17&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;Statement&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;Sid&amp;#34;: &amp;#34;PublicReadGetObject&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;Effect&amp;#34;: &amp;#34;Allow&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;Principal&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;Action&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;s3:GetObject&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;Resource&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;arn:aws:s3:::canihavepumpkinspiceyet/&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;With the entire path being required you can hash the locations to your objects like the vendors in the real world example did do. But they made one fatal mistake by leaving that option enabled and thus exposed PII to the internet.&lt;/p&gt;
+&lt;p&gt;I waited one week before asking if they clicked that button.&lt;/p&gt;
+&lt;p&gt;Well. I can see I’m going to have to look at other options and disclose to others I trusted with what I had found. I talked to a few friends of mine in the security world to get some advice. They suggested the following:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Look over the entire site for any kind of company contact or email address.&lt;/li&gt;
+&lt;li&gt;Start looking at LinkedIn and see what you can find about who works at the company to contact them directly&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;After some googling, I found a 3rd option: trying the “basic” email address. Abuse@, Security@, admin@, webmaster@, postmaster@, and privacy@.&lt;/p&gt;
+&lt;p&gt;I did just that. The company had zero contact information on their site which I didn’t really expect. I turned my sights to LinkedIn! From what I learned, this a vendor of the company from whom I’m getting this product. I started looking deeper and I saw that they have a very active security department. I began to mass spam and I got a response! He was able to get me the email of a person that I can send the issue over to, including all the other emails and proof I came up with. Here is my interaction with them:&lt;/p&gt;
+&lt;p&gt;I went to town!&lt;/p&gt;
+&lt;p&gt;Within 2 hours I got this message back from someone else, not a support person (Better…..) and they stated that there will be an update “soon”. Around 6pm I hear the vendor will be deploying a fix by Friday.&lt;/p&gt;
+&lt;p&gt;Oh, the engineers must love me by now. But apparently, cage-rattling seems to have worked.&lt;/p&gt;
+&lt;p&gt;So I waited, and I was happy to find it was ultimately fixed.&lt;/p&gt;
+&lt;p&gt;The moral of the story is if you see a major problem don’t give up until that problem is fixed!&lt;/p&gt;
+&lt;p&gt;I will be writing another post about what I learned and what you need to know if you find something like this or any type of security issue. {link post here}&lt;/p&gt;</description></item></channel></rss>

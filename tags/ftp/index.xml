@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FTP on Jason Kuehl Blog</title><link>https://blog.jasonkuehl.com/tags/ftp/</link><description>Recent content in FTP on Jason Kuehl Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 16 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.jasonkuehl.com/tags/ftp/index.xml" rel="self" type="application/rss+xml"/><item><title>FTP Is 50 Today</title><link>https://blog.jasonkuehl.com/p/ftp-is-50-today/</link><pubDate>Fri, 16 Apr 2021 00:00:00 +0000</pubDate><guid>https://blog.jasonkuehl.com/p/ftp-is-50-today/</guid><description>&lt;img src="https://blog.jasonkuehl.com/p/ftp-is-50-today/cover.jpg" alt="Featured image of post FTP Is 50 Today" /&gt;&lt;p&gt;April 16th, 1971 RFC959 (you may know it as FTP) was born, making it 50 years old today. Even though it is that old and there are serious security concerns, there are still numerous FTP servers running. For example (Pulled from Shodan):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;United States 736,721
+Japan 285,691
+China 284,550
+Germany 280,699
+Russian Federation 151,815
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s look just into the United States numbers on top products:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Microsoft ftpd 496,113
+Pure-FTPd 122,447
+Serv-U ftpd 34,093
+Multicraft ftpd 32,531
+D-Link DLS-2750U13,543
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="ftp-lacks-security"&gt;FTP Lacks Security
+&lt;/h2&gt;&lt;p&gt;FTP is inherently a non-secure way to transfer data. When a file is sent using this protocol the data, username, and password are all shared in plain text, which means a hacker can access this information with little to no effort.&lt;/p&gt;
+&lt;p&gt;Most of the FTP services I looked at didn’t allow anonymous login but did have usernames and passwords attached. Which you think would be a good security protocol. However, all these servers (since they’re running Microsoft ftpd) could be exploited by CVE-2009-3023. There are 2 known public bash-like exploits that anyone can run just off GitHub, and the 3rd is a very easy-to-use Metasploit module:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;‘show options’ or ‘show advanced’:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;msf &amp;gt; use exploit/multi/ftp/pureftpd_bash_env_exec msf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;exploit(pureftpd_bash_env_exec) &amp;gt; show targets …targets… msf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;exploit(pureftpd_bash_env_exec) &amp;gt; set TARGET &amp;lt; target-id &amp;gt; msf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;exploit(pureftpd_bash_env_exec) &amp;gt; show options …show and set
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;options… msf exploit(pureftpd_bash_env_exec) &amp;gt; exploit
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="data"&gt;Data.
+&lt;/h2&gt;&lt;p&gt;Plus the data is transmitted unencrypted. Need I say more…&lt;/p&gt;
+&lt;h2 id="nat"&gt;Nat.
+&lt;/h2&gt;&lt;p&gt;A dynamic, secondary port, is needed for the data channels, which makes firewall and port forwarding more complex and beyond the abilities of most home network administrators. This is required to achieve the fantastic transfer speeds that many FTP proponents crow about.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion.
+&lt;/h2&gt;&lt;p&gt;Today, FTP should only be used on extreme legacy systems and for public access anonymous FTP. Even for anonymous public access, HTTPS and web servers have largely replaced FTP. Since FTP is unencrypted, man-in-the-middle attacks can and have been used to inject malware into software downloaded using FTP.&lt;/p&gt;
+&lt;p&gt;Yet, there are so many still online. Basic things you buy today come with FTP enabled (like printers).&lt;/p&gt;
+&lt;p&gt;If you really need external file transfer, you should already be used SFTP at the very least or HTTPS for public files.&lt;/p&gt;
+&lt;p&gt;Lord stop using FTP already. #StopUsingFTP&lt;/p&gt;</description></item></channel></rss>
