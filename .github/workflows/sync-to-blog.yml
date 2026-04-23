@@ -1,70 +1,16 @@
-name: Sync template changes to blog
+name: Deprecated sync-to-blog
 
-# Manually triggered from the Actions tab.
-# Syncs all template-related changes (workflows, layouts, theme deps, theme
-# config) from this test/QA repo to jasonkuehl/blog without touching
-# blog-specific content.
-#
-# Prerequisites:
-#   Create a repository secret named BLOG_SYNC_TOKEN containing a GitHub
-#   Personal Access Token (classic or fine-grained) with read/write access to
-#   the jasonkuehl/blog repository (contents + pull-requests scopes).
-
+# This workflow is intentionally kept as a pointer so it is clear that syncs
+# are now run from the blog repository.
 on:
   workflow_dispatch:
 
 jobs:
-  sync:
+  notice:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout test-blog
-        uses: actions/checkout@v4
-        with:
-          path: test-blog
-
-      - name: Checkout blog
-        uses: actions/checkout@v4
-        with:
-          repository: jasonkuehl/blog
-          token: ${{ secrets.BLOG_SYNC_TOKEN }}
-          path: blog
-
-      - name: Sync template files
+      - name: Sync moved to blog repository
         run: |
-          # GitHub Actions workflows
-          rsync -av --delete test-blog/.github/workflows/ blog/.github/workflows/
-
-          # Hugo layout overrides (shortcodes, partials, _internal templates)
-          rsync -av --delete test-blog/layouts/ blog/layouts/
-
-          # Hugo module dependencies (theme version)
-          cp test-blog/go.mod blog/go.mod
-          cp test-blog/go.sum  blog/go.sum
-
-          # Template-only config files
-          cp test-blog/config/_default/module.toml blog/config/_default/module.toml
-          cp test-blog/config/_default/params.toml blog/config/_default/params.toml
-
-      - name: Create pull request in blog repo
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.BLOG_SYNC_TOKEN }}
-          path: blog
-          commit-message: "sync: apply template changes from test-blog"
-          branch: sync/template-changes
-          delete-branch: true
-          title: "Sync template changes from test-blog"
-          body: |
-            Automated sync of template changes from [jasonkuehl/test-blog](https://github.com/jasonkuehl/test-blog).
-
-            **Files synced:**
-            - `.github/workflows/` — CI/CD workflows
-            - `layouts/` — Hugo layout overrides (shortcodes, partials, _internal)
-            - `go.mod` / `go.sum` — Hugo module dependencies (theme version)
-            - `config/_default/module.toml` — Hugo module import path
-            - `config/_default/params.toml` — Theme parameters
-
-            **Not synced (blog-specific):**
-            - `content/` — Blog posts and pages
-            - `config/_default/config.toml` — Site-specific settings (baseurl, title, disqus shortname)
+          echo "This workflow is deprecated."
+          echo "Run the manual workflow in jasonkuehl/blog instead:"
+          echo "Actions -> Sync from test-blog"
