@@ -16,6 +16,9 @@ RUN if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then npm ci; fi \
  && hugo --gc --minify ${BASE_URL:+--baseURL "$BASE_URL"}
 
 FROM nginx:${NGINX_VERSION}-alpine
+# Base images lag behind Alpine security fixes; apply them so the Trivy scan passes
+# hadolint ignore=DL3017
+RUN apk upgrade --no-cache
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /project/public /usr/share/nginx/html
 EXPOSE 80
