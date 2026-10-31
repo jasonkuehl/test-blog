@@ -29,6 +29,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 # Hugo dev server port
 EXPOSE 1313
 
+# Same user VS Code connects as (remoteUser in devcontainer.json); a dev container needs no health check
+USER node
+HEALTHCHECK NONE
+
 # [Optional] Uncomment this section to install additional OS packages you may want.
 #
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
