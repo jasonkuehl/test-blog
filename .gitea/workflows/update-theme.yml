@@ -26,6 +26,12 @@ jobs:
           hugo-version: 'latest'
           extended: true
 
+      # Hugo modules are Go modules; the runner image has no Go
+      - name: Setup Go
+        uses: https://git.yolo.fail/actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
       - name: Update theme
         run: hugo mod get -u
 
