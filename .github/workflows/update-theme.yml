@@ -18,10 +18,10 @@ jobs:
       contents: write
     
     steps:
-      - uses: https://git.yolo.fail/actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Hugo
-        uses: https://git.yolo.fail/actions/peaceiris-actions-hugo@v3
+        uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: 'latest'
           extended: true
@@ -33,6 +33,6 @@ jobs:
         run: hugo mod tidy
 
       - name: Commit changes
-        uses: https://git.yolo.fail/actions/stefanzweifel-git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "CI: Update theme"
