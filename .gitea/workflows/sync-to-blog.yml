@@ -1,0 +1,16 @@
+name: Deprecated sync-to-blog
+
+# This workflow is intentionally kept as a pointer so it is clear that syncs
+# are now run from the blog repository.
+on:
+  workflow_dispatch:
+
+jobs:
+  notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync moved to blog repository
+        run: |
+          echo "This workflow is deprecated."
+          echo "Run the manual workflow in jasonkuehl/blog instead:"
+          echo "Actions -> Sync from test-blog"
