@@ -28,7 +28,7 @@ jobs:
 
       # Hugo modules are Go modules; the runner image has no Go
       - name: Setup Go
-        uses: https://git.yolo.fail/actions/setup-go@v5
+        uses: https://git.yolo.fail/actions/setup-go@v7
         with:
           go-version-file: go.mod
 
