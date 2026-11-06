@@ -1,0 +1,19 @@
+# Runs the site in nginx on http://localhost:8082 (set PORT in a .env file to change it).
+#   docker compose up -d --build   build from this checkout and start
+#   docker compose pull && docker compose up -d   use the image CI pushed instead
+services:
+  test-blog:
+    image: git.yolo.fail/invader/test-blog:latest
+    build: .
+    container_name: test-blog
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8082}:80"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx:uid=101,gid=101
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
